@@ -1,43 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover" />
-  <title>AR Sky</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Last Sky 🌌</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Camera -->
-    <video id="cam" autoplay playsinline muted></video>
-    <canvas id="overlay"></canvas>
-
-    <!-- UI Controls -->
-    <div id="ui" class="panel">
-      <div class="controls">
-        <button id="btnCamera">Start Camera</button>
-        <button id="btnGeo">Get Location</button>
-        <button id="btnMotion">Allow Motion</button>
-      </div>
-
-      <div class="fov">
-        <label>FOV: <span id="hfovLabel">60</span>°</label>
-        <input id="hfov" type="range" min="30" max="120" value="60" />
-      </div>
-
-      <div class="objects">
-        <label><input type="checkbox" class="objChk" data-body="Moon" checked/> Moon</label>
-        <label><input type="checkbox" class="objChk" data-body="Sun"/> Sun</label>
-        <label><input type="checkbox" class="objChk" data-body="Mars"/> Mars</label>
-        <label><input type="checkbox" class="objChk" data-body="Jupiter"/> Jupiter</label>
-      </div>
-
-      <div id="status">Status: idle</div>
-    </div>
+  <div id="camera-container">
+    <video id="camera" autoplay playsinline></video>
+    <canvas id="sky-overlay"></canvas>
   </div>
 
-  <!-- Astronomy library -->
-  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.browser.min.js"></script>
+  <div id="controls">
+    <button id="start-btn">🌌 Start Sky AR</button>
+  </div>
+
+  <!-- Astronomy Engine for Moon & planet positions -->
+  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
