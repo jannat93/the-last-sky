@@ -1,12 +1,10 @@
 [
-  { "name": "Sirius", "ra": 6.752, "dec": -16.716, "mag": -1.46 },
-  { "name": "Canopus", "ra": 6.399, "dec": -52.695, "mag": -0.72 },
-  { "name": "Arcturus", "ra": 14.261, "dec": 19.182, "mag": -0.05 },
-  { "name": "Vega", "ra": 18.615, "dec": 38.783, "mag": 0.03 },
-  { "name": "Capella", "ra": 5.278, "dec": 45.997, "mag": 0.08 },
-  { "name": "Rigel", "ra": 5.242, "dec": -8.202, "mag": 0.18 },
-  { "name": "Procyon", "ra": 7.655, "dec": 5.225, "mag": 0.38 },
-  { "name": "Achernar", "ra": 1.628, "dec": -57.236, "mag": 0.46 },
-  { "name": "Betelgeuse", "ra": 5.919, "dec": 7.407, "mag": 0.50 },
-  { "name": "Altair", "ra": 19.846, "dec": 8.868, "mag": 0.77 }
+  { "name": "Sirius", "ra": 101.2875, "dec": -16.7161, "magnitude": -1.46 },
+  { "name": "Canopus", "ra": 95.9879, "dec": -52.6957, "magnitude": -0.74 },
+  { "name": "Arcturus", "ra": 213.9154, "dec": 19.1825, "magnitude": -0.05 },
+  { "name": "Vega", "ra": 279.2347, "dec": 38.7837, "magnitude": 0.03 },
+  { "name": "Capella", "ra": 79.1723, "dec": 45.9979, "magnitude": 0.08 },
+  { "name": "Rigel", "ra": 78.6345, "dec": -8.2016, "magnitude": 0.12 },
+  { "name": "Procyon", "ra": 114.8255, "dec": 5.2250, "magnitude": 0.34 },
+  { "name": "Betelgeuse", "ra": 88.7929, "dec": 7.4071, "magnitude": 0.42 }
 ]
