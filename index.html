@@ -3,21 +3,177 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Last Sky 🌌</title>
-  <link rel="stylesheet" href="style.css">
+  <title>NASA Space Explorer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .layer-selector {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .apod-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: cyan;
+    }
+    .apod-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .apod-content {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      color: #fff;
+    }
+    .apod-content img {
+      max-width: 100%;
+      border-radius: 10px;
+    }
+    .close-btn {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background: cyan;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div id="camera-container">
-    <video id="camera" autoplay playsinline></video>
-    <canvas id="sky-overlay"></canvas>
-  </div>
 
-  <div id="controls">
-    <button id="start-btn">🌌 Start Sky AR</button>
-  </div>
+<div id="map"></div>
 
-  <!-- Astronomy Engine for Moon & planets -->
-  <script src="https://cdn.jsdelivr.net/npm/astronomy-engine/astronomy.min.js"></script>
-  <script src="script.js"></script>
+<div class="layer-selector">
+  <select id="layerSelect">
+    <option value="earth">EARTH</option>
+    <option value="mars">MARS</option>
+    <option value="moon">MOON</option>
+    <option value="andromeda">ANDROMEDA</option>
+  </select>
+</div>
+
+<div class="apod-button" id="apodBtn">APOD</div>
+
+<div id="apodModal" class="apod-modal" style="display:none;">
+  <div class="apod-content" id="apodContent">
+    <button class="close-btn" id="closeApod">Close</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Initialize map
+  let map = L.map('map').setView([0, 0], 2);
+
+  // Tile layers
+  const tiles = {
+    earth: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }),
+    mars: L.tileLayer('https://cartocdn-gusc.global.ssl.fastly.net/opm/api/v1/map/mars_realistic_relief_map/{z}/{x}/{y}.png', {
+      attribution: '© Open Planetary'
+    }),
+    moon: L.tileLayer('https://cartocdn-gusc.global.ssl.fastly.net/opm/api/v1/map/moon_basemap/{z}/{x}/{y}.png', {
+      attribution: '© Open Planetary'
+    }),
+    andromeda: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // Placeholder
+      attribution: 'Andromeda marker'
+    })
+  };
+
+  tiles.earth.addTo(map);
+
+  // Andromeda marker
+  const andromedaMarker = L.marker([41.268, -2.203]).bindPopup('Andromeda Galaxy (M31)');
+
+  // Layer switching
+  const layerSelect = document.getElementById('layerSelect');
+  layerSelect.addEventListener('change', (e) => {
+    const layer = e.target.value;
+    map.eachLayer(l => map.removeLayer(l));
+    tiles[layer].addTo(map);
+
+    if(layer === 'andromeda') {
+      andromedaMarker.addTo(map);
+      map.setView([41.268, -2.203], 2);
+    } else if(layer === 'mars' || layer === 'moon') {
+      map.setView([0, 0], 1);
+    } else {
+      map.setView([0, 0], 2);
+    }
+  });
+
+  // Fetch APOD
+  const nasaApiKey = 'DEMO_KEY';
+  let apodData = null;
+
+  async function fetchApod() {
+    try {
+      const res = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaApiKey}`);
+      apodData = await res.json();
+    } catch(err) {
+      console.error('Error fetching APOD:', err);
+    }
+  }
+
+  fetchApod();
+
+  const apodBtn = document.getElementById('apodBtn');
+  const apodModal = document.getElementById('apodModal');
+  const apodContent = document.getElementById('apodContent');
+  const closeApod = document.getElementById('closeApod');
+
+  apodBtn.addEventListener('click', () => {
+    if(apodData) {
+      apodContent.innerHTML = `
+        <h2>${apodData.title}</h2>
+        ${apodData.media_type === 'image' ? `<img src="${apodData.url}" alt="APOD">` : ''}
+        <p>${apodData.explanation}</p>
+        <button class="close-btn" id="closeApod">Close</button>
+      `;
+      apodModal.style.display = 'flex';
+      document.getElementById('closeApod').addEventListener('click', () => {
+        apodModal.style.display = 'none';
+      });
+    }
+  });
+
+</script>
+
 </body>
 </html>
